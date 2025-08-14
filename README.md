@@ -75,9 +75,17 @@ Si usas JDK 24, ejecutar con `-Pcoverage` puede fallar hasta que JaCoCo añada s
 - Los tests unitarios funcionan en JDK 24 con la configuración anterior; aún podrían aparecer algunos warnings de herramientas de terceros.
 - La cobertura con JaCoCo está deshabilitada por defecto en JDK 24. Para cobertura, cambia a JDK 21 y ejecuta con `-Pcoverage`.
 
-## VS Code
-- Instala "Extension Pack for Java".
-- Usa el Test Explorer para ejecutar pruebas.
+## IntelliJ IDEA (Community)
+- Abre el proyecto con "Open" (detectará Maven automáticamente).
+- Configura el SDK del proyecto: File > Project Structure > Project SDK.
+  - JDK 24 recomendado para desarrollo y ejecución de tests sin cobertura.
+  - JDK 21 recomendado para generar cobertura con `-Pcoverage`.
+- Ejecuta tests:
+  - Desde el icono de ejecución (gutter ▶) al lado de la clase/método de test.
+  - O desde la ventana de Maven (View > Tool Windows > Maven): `Lifecycle > test` o `verify`.
+- Cobertura con JaCoCo:
+  - Activa el perfil Maven `coverage` en la ventana de Maven (Profiles > coverage) y ejecuta `verify` usando JDK 21.
+  - Abre el reporte en `target/site/jacoco/index.html`.
 
 ## Extender pruebas
 - Agrega escenarios de reintentos/idempotencia con `verify(..., times(N))`.
