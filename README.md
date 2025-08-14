@@ -1,18 +1,18 @@
-# FoodDeliveryX - OrderService Mocking Analysis
+# FoodDeliveryX - Análisis de Mocking de OrderService
 
-This project demonstrates how to isolate `OrderService` from external dependencies (`PaymentService`, `CourierService`) using unit tests with Mockito and JUnit 5.
+Este proyecto demuestra cómo aislar `OrderService` de dependencias externas (`PaymentService`, `CourierService`) usando pruebas unitarias con Mockito y JUnit 5.
 
-Key goals:
-- Happy-path: successful payment + courier request.
-- Error handling: simulated payment exception, courier unavailable.
-- Interaction verification with `ArgumentCaptor`.
-- Targeted use of `@Spy` for pure internal methods.
+Objetivos clave:
+- Flujo feliz: pago exitoso + solicitud a courier.
+- Manejo de errores: excepción de pago simulada, courier no disponible.
+- Verificación de interacciones con `ArgumentCaptor`.
+- Uso dirigido de `@Spy` para métodos internos puros.
 
-## Requirements
+## Requisitos
 - Maven 3.9+
-- JDK 21+ (Tests run on 24 too. For coverage via JaCoCo, prefer JDK 21 due to tool support.)
+- JDK 21+ (Los tests también corren en 24. Para cobertura con JaCoCo, preferir JDK 21 por soporte de herramientas.)
 
-## Project layout
+## Estructura del proyecto
 ```
 fooddeliveryx/
   pom.xml
@@ -41,48 +41,48 @@ fooddeliveryx/
         org.mockito.plugins.MockMaker
 ```
 
-## How to run
-- Fast build without tests:
+## Cómo ejecutar
+- Build rápido sin tests:
   ```bash
   mvn -q -DskipTests package
   ```
-- Run unit tests:
+- Ejecutar pruebas unitarias:
   ```bash
   mvn -q test
   ```
-- Local pipeline (tests + verify phase):
+- Pipeline local (tests + verify):
   ```bash
   mvn -q verify
   ```
 
-## Code coverage (JaCoCo)
-JaCoCo is configured but skipped by default (due to current Java 24 class format support gaps).
+## Cobertura (JaCoCo)
+JaCoCo está configurado pero se omite por defecto (debido a brechas de soporte para Java 24).
 
-- To generate coverage and enforce 85% on `application` and `domain`, use JDK 21 and run:
+- Para generar cobertura y aplicar 85% en `application` y `domain`, usar JDK 21 y ejecutar:
   ```bash
   mvn -q -Pcoverage verify
   ```
-- Reports: `target/site/jacoco/index.html`
+- Reporte: `target/site/jacoco/index.html`
 
-If using JDK 24, running with `-Pcoverage` may fail until JaCoCo adds Java 24 support.
+Si usas JDK 24, ejecutar con `-Pcoverage` puede fallar hasta que JaCoCo añada soporte completo para Java 24.
 
-## Mockito on modern JDKs
-- Byte Buddy is explicitly pinned for tests: `net.bytebuddy:byte-buddy:1.15.0` and `net.bytebuddy:byte-buddy-agent:1.15.0` to improve compatibility with JDK 24.
-- Surefire is configured with `argLine=-XX:+EnableDynamicAgentLoading` to silence the dynamic agent warning on JDK 24.
-- We force the subclass mock maker in tests via `src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker` to avoid instrumentation issues on JDK 24.
+## Mockito en JDK modernos
+- Byte Buddy está fijado explícitamente para tests: `net.bytebuddy:byte-buddy:1.15.0` y `net.bytebuddy:byte-buddy-agent:1.15.0` para mejorar compatibilidad con JDK 24.
+- Surefire está configurado con `argLine=-XX:+EnableDynamicAgentLoading` para silenciar el warning de carga dinámica del agente en JDK 24.
+- Se fuerza el mock maker por subclase vía `src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker` para evitar problemas de instrumentación en JDK 24.
 
-### Runtime notes (JDK 24)
-- Unit tests run fine on JDK 24 with the above settings; you may still see some warnings from third-party tooling.
-- Coverage via JaCoCo is disabled by default on JDK 24. For coverage, switch to JDK 21 and run with `-Pcoverage`.
+### Notas de ejecución (JDK 24)
+- Los tests unitarios funcionan en JDK 24 con la configuración anterior; aún podrían aparecer algunos warnings de herramientas de terceros.
+- La cobertura con JaCoCo está deshabilitada por defecto en JDK 24. Para cobertura, cambia a JDK 21 y ejecuta con `-Pcoverage`.
 
 ## VS Code
-- Install "Extension Pack for Java".
-- Use Test Explorer to run tests.
+- Instala "Extension Pack for Java".
+- Usa el Test Explorer para ejecutar pruebas.
 
-## Extending tests
-- Add retry/idempotency scenarios with `verify(..., times(N))`.
-- Add extra assertions with AssertJ for clarity.
+## Extender pruebas
+- Agrega escenarios de reintentos/idempotencia con `verify(..., times(N))`.
+- Añade aserciones adicionales con AssertJ para mayor claridad.
 
-## Notes
-- No real external calls: all dependencies are mocked.
-- English naming in code, short Spanish comments where helpful.
+## Notas
+- Sin llamadas externas reales: todas las dependencias están mockeadas.
+- Nombres en inglés en el código, comentarios breves en español donde ayude.
