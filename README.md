@@ -1,0 +1,83 @@
+# FoodDeliveryX - OrderService Mocking Analysis
+
+This project demonstrates how to isolate `OrderService` from external dependencies (`PaymentService`, `CourierService`) using unit tests with Mockito and JUnit 5.
+
+Key goals:
+- Happy-path: successful payment + courier request.
+- Error handling: simulated payment exception, courier unavailable.
+- Interaction verification with `ArgumentCaptor`.
+- Targeted use of `@Spy` for pure internal methods.
+
+## Requirements
+- Maven 3.9+
+- JDK 21+ (Tests run on 24 too. For coverage via JaCoCo, prefer JDK 21 due to tool support.)
+
+## Project layout
+```
+fooddeliveryx/
+  pom.xml
+  src/
+    main/java/com/fooddeliveryx/
+      domain/
+        Order.java
+        PaymentRequest.java
+        PaymentResult.java
+        CourierRequest.java
+        CourierAssignment.java
+        exceptions/
+          PaymentRejectedException.java
+      ports/
+        PaymentService.java
+        CourierService.java
+      application/
+        OrderService.java
+    test/java/com/fooddeliveryx/
+      application/
+        OrderServiceTest.java
+      fixtures/
+        OrderFixtures.java
+    test/resources/
+      mockito-extensions/
+        org.mockito.plugins.MockMaker
+```
+
+## How to run
+- Fast build without tests:
+  ```bash
+  mvn -q -DskipTests package
+  ```
+- Run unit tests:
+  ```bash
+  mvn -q test
+  ```
+- Local pipeline (tests + verify phase):
+  ```bash
+  mvn -q verify
+  ```
+
+## Code coverage (JaCoCo)
+JaCoCo is configured but skipped by default (due to current Java 24 class format support gaps).
+
+- To generate coverage and enforce 85% on `application` and `domain`, use JDK 21 and run:
+  ```bash
+  mvn -q -Pcoverage verify
+  ```
+- Reports: `target/site/jacoco/index.html`
+
+If using JDK 24, running with `-Pcoverage` may fail until JaCoCo adds Java 24 support.
+
+## Mockito on modern JDKs
+- We set `net.bytebuddy.experimental=true` via Surefire to enable inline capabilities on new JDKs.
+- We force the subclass mock maker in tests via `src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker` to avoid instrumentation issues on JDK 24.
+
+## VS Code
+- Install "Extension Pack for Java".
+- Use Test Explorer to run tests.
+
+## Extending tests
+- Add retry/idempotency scenarios with `verify(..., times(N))`.
+- Add extra assertions with AssertJ for clarity.
+
+## Notes
+- No real external calls: all dependencies are mocked.
+- English naming in code, short Spanish comments where helpful.
