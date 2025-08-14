@@ -67,8 +67,13 @@ JaCoCo is configured but skipped by default (due to current Java 24 class format
 If using JDK 24, running with `-Pcoverage` may fail until JaCoCo adds Java 24 support.
 
 ## Mockito on modern JDKs
-- We set `net.bytebuddy.experimental=true` via Surefire to enable inline capabilities on new JDKs.
+- Byte Buddy is explicitly pinned for tests: `net.bytebuddy:byte-buddy:1.15.0` and `net.bytebuddy:byte-buddy-agent:1.15.0` to improve compatibility with JDK 24.
+- Surefire is configured with `argLine=-XX:+EnableDynamicAgentLoading` to silence the dynamic agent warning on JDK 24.
 - We force the subclass mock maker in tests via `src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker` to avoid instrumentation issues on JDK 24.
+
+### Runtime notes (JDK 24)
+- Unit tests run fine on JDK 24 with the above settings; you may still see some warnings from third-party tooling.
+- Coverage via JaCoCo is disabled by default on JDK 24. For coverage, switch to JDK 21 and run with `-Pcoverage`.
 
 ## VS Code
 - Install "Extension Pack for Java".
